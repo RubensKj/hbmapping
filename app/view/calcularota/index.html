@@ -1,0 +1,157 @@
+<div class="form-area">
+  <div id="calcula-rota-card" class="form-card">
+    <header>
+      <span>Calcula Rota</span>
+    </header>
+    <form ng-submit="calcularRota()">
+      <div class="error-area origin">
+        <span>{{errorOrigin}}</span>
+      </div>
+      <div class="subtitle-area">
+        <span class="subtitle">Origem</span>
+      </div>
+      <div class="input-area">
+        <input type="text" ng-model="origin.logradouro" placeholder="Logradouro (Opcional)">
+      </div>
+      <div class="input-area">
+        <input type="text" ng-model="origin.bairro" placeholder="Bairro">
+      </div>
+      <div class="input-area">
+        <select ng-model="origin.estado" ng-options="estado for estado in estados">
+          <option value="">Selecione um estado</option>
+        </select>
+      </div>
+      <div class="input-area">
+        <input type="text" ng-model="origin.cidade" placeholder="Cidade">
+      </div>
+      <!-- <div class="input-area">
+        <input type="text" ng-model="origin.pais" placeholder="Pais">
+      </div> -->
+      <div class="error-area destination">
+        <span>{{errorDestination}}</span>
+      </div>
+      <div class="subtitle-area">
+        <span class="subtitle">Destino</span>
+      </div>
+      <div class="input-area">
+        <input type="text" ng-model="destination.logradouro" placeholder="Logradouro (Opcional)">
+      </div>
+      <div class="input-area">
+        <input type="text" ng-model="destination.bairro" placeholder="Bairro">
+      </div>
+      <div class="input-area">
+        <select ng-model="destination.estado" ng-options="estado for estado in estados">
+          <option value="">Selecione um estado</option>
+        </select>
+      </div>
+      <div class="input-area">
+        <input type="text" ng-model="destination.cidade" placeholder="Cidade">
+      </div>
+      <!-- <div class="input-area">
+        <input type="text" ng-model="destination.pais" placeholder="Pais">
+      </div> -->
+      <div class="button-area">
+        <button type="submit">Calcular</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="searched-list-area">
+  <header>
+    <span>Pesquisas já feitas</span>
+  </header>
+  <div ng-repeat="distance in distancesCalculated" class="search-item">
+    <header>
+      <span ng-bind="distance.origin" class="distance"></span>
+      <span>para</span>
+      <span ng-bind="distance.destination" class="distance"></span>
+    </header>
+    <div class="distances-meters">
+      <span ng-bind="distance.distanceInMeters + ' metros'"></span>
+      <span ng-bind="(distance.distanceInMeters / 1000).toFixed(1) + ' quilometros'"></span>
+    </div>
+  </div>
+</div>
+
+<div ng-if="hasContentDistance" id="modal-content-distance" class="modal-area">
+  <div class="modal-content">
+    <header>
+      <h1>Resultado do calculo.</h1>
+    </header>
+    <div class="content-area-results">
+      <div class="result">
+        <span class="static-text">Quantidade em metros: </span>
+        <span class="variable-text" ng-bind="distanceDTO.distanceInMeters + ' Metros'"></span>
+      </div>
+      <div class="result">
+        <span class="static-text">Quantidade em quilometros: </span>
+        <span class="variable-text" ng-bind="(distanceDTO.distanceInMeters / 1000) + ' Km'"></span>
+      </div>
+      <div class="result">
+        <span class="place-text">Origem</span>
+        <div class="result-coords">
+          <div class="latitude">
+            <span class="static-text">Latitude: </span>
+            <span class="variable-text" ng-bind="distanceDTO.origin.lat"></span>
+          </div>
+          <div class="longitude">
+            <span class="static-text">Longitude: </span>
+            <span class="variable-text" ng-bind="distanceDTO.origin.lon"></span>
+          </div>
+        </div>
+      </div>
+      <div class="result">
+        <span class="place-text">Destino</span>
+        <div class="result-coords">
+          <div class="latitude">
+            <span class="static-text">Latitude: </span>
+            <span class="variable-text" ng-bind="distanceDTO.destination.lat"></span>
+          </div>
+          <div class="longitude">
+            <span class="static-text">Longitude: </span>
+            <span class="variable-text" ng-bind="distanceDTO.destination.lon"></span>
+          </div>
+        </div>
+      </div>
+      <div class="button-area-modal">
+        <button ng-click="closeModalContent()" type="button">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ERROR AREA -->
+
+<div ng-if="hasContentError" id="modal-content-distance" class="modal-area">
+  <div class="modal-content">
+    <header>
+      <h1 ng-bind="errorFromApi.title + ' - ' + errorFromApi.status"></h1>
+    </header>
+    <div class="content-area-results">
+      <div class="result">
+        <span class="place-text errorMessage">Pedimos desculpas pelo ocorrido.</span>
+        <div class="result-coords">
+          <div class="latitude">
+            <span class="variable-text" ng-bind="errorFromApi.messageFromApi"></span>
+          </div>
+          <div class="longitude">
+            <span class="variable-text" ng-bind="'Data: ' + (errorFromApi.time | date:'dd/MM/yyyy - HH:mm:ss')"></span>
+          </div>
+        </div>
+      </div>
+      <div class="button-area-modal">
+        <button ng-click="closeModalErrorContent()" type="button">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div ng-if="isLoading" id="modal-content-distance" class="loading-modal-area">
+  <div class="loading-modal-content">
+    <span>
+      <div class="loading-spinner"></div>
+    </span>
+    <span class="text-loading">Carregando...</span>
+  </div>
+</div>
